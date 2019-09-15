@@ -40,7 +40,7 @@ class MyView(BaseView):
     @expose('/method1/')
     @has_access
     def method1(self):
-        return 'hello'
+        return 'hello world, you are welcome'
 
     @expose('/method2/<string:param1>')
     @has_access
@@ -48,13 +48,21 @@ class MyView(BaseView):
 
         return 'goodbye %s' % param1
 
+    @expose('/method3/<string:param_a>')
+    @has_access
+    def method3(self, param_a):
+        param = "I am %s" % param_a
+        self.update_redirect()
+        return self.render_template('method_1.html', param_a=param_a)
+
 
 appbuilder.add_view(
-    MyView, "method1", category="my view",
-
+    MyView, "method1", category="学习天地",
 )
 
-appbuilder.add_link("method2", href='myview/method2/john', category='my view')
+# add_link会重复添加链接，add_view也一样
+appbuilder.add_link("method2", href='myview/method2/john', category='学习天地')
+appbuilder.add_link("method3", href='myview/method3/johnson', category='学习天地')
 
 """
     Application wide 404 error handler
