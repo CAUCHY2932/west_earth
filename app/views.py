@@ -1,7 +1,7 @@
 from flask import render_template
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder import ModelView, ModelRestApi, BaseView, expose, has_access
-
+from .models import Student, User, Role
 from . import appbuilder, db
 
 """
@@ -33,36 +33,22 @@ from . import appbuilder, db
 """
 
 
-# 类似于蓝图的概念
-class MyView(BaseView):
-    default_view = "method1"
-
-    @expose('/method1/')
-    @has_access
-    def method1(self):
-        return 'hello world, you are welcome'
-
-    @expose('/method2/<string:param1>')
-    @has_access
-    def method2(self, param1):
-
-        return 'goodbye %s' % param1
-
-    @expose('/method3/<string:param_a>')
-    @has_access
-    def method3(self, param_a):
-        param = "I am %s" % param_a
-        self.update_redirect()
-        return self.render_template('method_1.html', param_a=param_a)
+class New(ModelView):
+    datamodel = SQLAInterface(Student)
 
 
-appbuilder.add_view(
-    MyView, "method1", category="学习天地",
-)
+class UserManage(ModelView):
+    datamodel = SQLAInterface(User)
 
+
+class RoleManage(ModelView):
+    datamodel = SQLAInterface(Role)
+
+
+appbuilder.add_view(New, "学生", icon="gear", category='学生管理',)
+appbuilder.add_view(UserManage, "用户管理", icon="gear", category='用户管理',)
+appbuilder.add_view(RoleManage, "角色管理", icon="gear", category='角色管理',)
 # add_link会重复添加链接，add_view也一样
-appbuilder.add_link("method2", href='myview/method2/john', category='学习天地')
-appbuilder.add_link("method3", href='myview/method3/johnson', category='学习天地')
 
 """
     Application wide 404 error handler
